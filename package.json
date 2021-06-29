@@ -14,7 +14,9 @@
   "keywords": [
     "Express",
     "Node.js",
-    "Google Search API"
+    "Google Search API",
+    "MongoDB",
+    "Mongoose"
   ],
   "author": "Lucas Chapman",
   "license": "MIT",
