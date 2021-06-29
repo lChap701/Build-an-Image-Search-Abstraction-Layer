@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Custom Search Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Castoro&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/" title="Home">Home</a>
+        <a href="/cse" title="Google Custom Search Engine" class="active"
+          >Google Custom Search Engine</a
+        >
+      </nav>
+    </header>
+
+    <div id="container">
+      <h1>Google Custom Search Engine</h1>
+      <p>A simplified way to search for images</p>
+      <hr />
+      <div id="searchbox-container">
+        <script
+          async
+          src="https://cse.google.com/cse.js?cx=550da5a5df219eebf"
+        ></script>
+        <div class="gcse-searchbox-only"></div>
+      </div>
+
+      <p>
+        <b>Note</b>: This page uses
+        <abbr title="Custom Search Engine">CSE</abbr> which is provided by
+        Google for the purposes of searching for content and has it's own URL
+      </p>
+    </div>
+  </body>
+</html>
