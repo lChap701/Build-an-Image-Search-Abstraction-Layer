@@ -2,14 +2,43 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <script
+      src="https://kit.fontawesome.com/855ee508c4.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Castoro&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" type="text/css" />
   </head>
 
   <body>
-    <script
+    <!--<script
       async
       src="https://cse.google.com/cse.js?cx=550da5a5df219eebf"
-    ></script>
-    <div class="gcse-search"></div>
+      ></script>
+      <div class="gcse-search"></div>-->
+    <h1>Image Search Abstraction Layer</h1>
+    <hr />
+    <p>Search for images across the internet or view recent searches</p>
+
+    <form action="/query/" name="query-form">
+      <div class="col">
+        <label for="query">Query:</label>
+        <input type="text" name="query" id="query" />
+      </div>
+
+      <div class="col">
+        <label for="pages">Pages:</label>
+        <input type="number" name="pages" id="pages" required min="1" max="100" />
+      </div>
+
+      <button type="submit"><i class="fas fa-search"></i> Search</button>
+
+      <a href="/recent/">Most recent searches</a>
+    </form>
   </body>
 </html>
