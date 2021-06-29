@@ -4,7 +4,8 @@
   "description": "This project was created to earn a certificate from freeCodeCamp and it allows users to search for images.",
   "main": "index.js",
   "scripts": {
-    "test": "test.js"
+    "test": "test.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -13,13 +14,20 @@
   "keywords": [
     "Express",
     "Node.js",
-    "Mongoose",
-    "MongoDB"
+    "Google Search API"
   ],
   "author": "Lucas Chapman",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/lChap701/Build-an-Image-Search-Abstraction-Layer/issues"
   },
-  "homepage": "https://github.com/lChap701/Build-an-Image-Search-Abstraction-Layer#readme"
+  "homepage": "https://github.com/lChap701/Build-an-Image-Search-Abstraction-Layer#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "google-images": "^2.1.0",
+    "minify": "^7.0.2"
+  }
 }
