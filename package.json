@@ -24,12 +24,15 @@
     "url": "https://github.com/lChap701/Build-an-Image-Search-Abstraction-Layer/issues"
   },
   "homepage": "https://github.com/lChap701/Build-an-Image-Search-Abstraction-Layer#readme",
+  "website": "https://Build-an-Image-Search-Abstraction-Layer.lchap701.repl.co",
+  "cse": "https://cse.google.com/cse?cx=550da5a5df219eebf",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "google-images": "^2.1.0",
+    "images-scraper": "^6.3.0",
     "minify": "^7.0.2",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.0"
