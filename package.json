@@ -33,7 +33,6 @@
     "express": "^4.17.1",
     "google-images": "^2.1.0",
     "images-scraper": "^6.3.0",
-    "minify": "^7.0.2",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.0"
   }
