@@ -17,7 +17,7 @@ const GoogleImages = require("google-images");
 
 app.use(cors());
 
-// Loads CSS styles
+// Loads CSS styles and JS scripts
 app.use(express.static(__dirname + "/public"));
 
 // Displays the Image Search Abstraction Layer page
@@ -37,6 +37,11 @@ app.post("/query/:query", (req, res) => {
   });
 });
 
+// Displays the most recent searches
+app.get("/recent/", (req, res) {
+  res.send("You made it!")
+});
+
 // Displays the Google Custom Search Engine page
 app.get("/cse", (req, res) => {
   res.sendFile(__dirname + "/public/cse.html");
@@ -47,6 +52,7 @@ app.get("/cse", (req, res) => {
   console.log("results", results);
 })();*/
 
+// Sets the port used to access my app
 const listener = app.listen(process.env.PORT || 8080, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
