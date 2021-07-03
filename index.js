@@ -9,13 +9,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const GoogleImages = require("google-images");
-/*const google = new Scraper({
-  puppeteer: {
-    headless: true,
-  },
-});*/
 
 app.use(cors());
+
+// Formats the IP Address
+app.listen(process.env.PORT, "0.0.0.0");
+
+// Logs requests and other information
+app.use(function middleware(req, res, next) {
+  const fullPath = req.query.page > 0 ? req.path + "?page=" + req.query.page : req.path;
+  console.log(req.ip + " - " + req.method + "  " + fullPath);
+  next();
+});
 
 // Loads CSS styles and JS scripts
 app.use(express.static(__dirname + "/public"));
@@ -25,7 +30,7 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-// Finds images and displays the results
+// Finds images and displays the results after submitting a form
 app.post("/query/:query", (req, res) => {
   // Sets up search client
   const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
@@ -37,9 +42,16 @@ app.post("/query/:query", (req, res) => {
   });
 });
 
+// Finds images via query strings
 app.get("/query/:query", (req, res) => {
-  const query = req.params.query;
-  const queryParams = req.query;
+  // Sets up search client
+  const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
+
+  // Searches for images using query
+  const options = { page: req.query.page };
+  client.search(req.params.query, options).then((imgs) => {
+    res.json(imgs);
+  });
 });
 
 // Displays the most recent searches
@@ -51,11 +63,6 @@ app.get("/recent/", (req, res) => {
 app.get("/cse/", (req, res) => {
   res.sendFile(__dirname + "/public/cse.html");
 });
-
-/*(async () => {
-  const results = await google.scrape("banana", 200);
-  console.log("results", results);
-})();*/
 
 // Sets the port used to access my app
 const listener = app.listen(process.env.PORT || 8080, () => {
