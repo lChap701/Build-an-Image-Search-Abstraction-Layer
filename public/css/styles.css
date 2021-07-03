@@ -55,9 +55,10 @@ a {
 }
 
 a:hover,
-a:focus {
+a:focus,
+.active:hover,
+.active:focus {
   color: var(--link-hover-color);
-  text-decoration: underline;
 }
 
 a.active {
