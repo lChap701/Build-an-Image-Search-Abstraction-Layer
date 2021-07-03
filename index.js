@@ -37,13 +37,18 @@ app.post("/query/:query", (req, res) => {
   });
 });
 
+app.get("/query/:query", (req, res) => {
+  const query = req.params.query;
+  const queryParams = req.query;
+});
+
 // Displays the most recent searches
 app.get("/recent/", (req, res) => {
   res.send("You made it!");
 });
 
 // Displays the Google Custom Search Engine page
-app.get("/cse", (req, res) => {
+app.get("/cse/", (req, res) => {
   res.sendFile(__dirname + "/public/cse.html");
 });
 
