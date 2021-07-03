@@ -38,8 +38,8 @@ app.post("/query/:query", (req, res) => {
 });
 
 // Displays the most recent searches
-app.get("/recent/", (req, res) {
-  res.send("You made it!")
+app.get("/recent/", (req, res) => {
+  res.send("You made it!");
 });
 
 // Displays the Google Custom Search Engine page
