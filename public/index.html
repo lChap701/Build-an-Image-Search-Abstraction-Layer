@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/styles.css" type="text/css" />
-    <script src="/js/formHandler.min.js" defer></script>
+    <script src="/js/formHandler.js" defer></script>
   </head>
   <body>
     <header>
@@ -45,20 +45,52 @@
 
           <div class="col">
             <label for="query">Query:</label>
-            <input type="text" name="query" id="query" />
+            <input list="terms" name="query" id="query" />
+
+            <!-- Displays the most recent terms (for this microservice)  -->
+            <datalist id="terms">
+              <option value=""></option>
+            </datalist>
           </div>
 
           <div class="col">
-            <label for="pages">Page:</label>
+            <label for="page">Page:</label>
             <input
               type="number"
-              name="pages"
-              id="pages"
+              name="page"
+              id="page"
               required
               min="1"
               max="100"
               value="1"
             />
+          </div>
+
+          <div class="col">
+            <label for="size">Image Size:</label>
+            <select id="size" name="size">
+              <option value="imgSizeUndefined">All</option>
+              <option value="ICON">Icon</option>
+              <option value="SMALL">Small</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LARGE">Large</option>
+              <option value="XLARGE">XL</option>
+              <option value="XXLARGE">XXL</option>
+              <option value="HUGE">Huge</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label for="type">Image Type:</label>
+            <select id="type" name="type">
+              <option value="imgTypeUndefined">Any</option>
+              <option value="clipart">Clipart</option>
+              <option value="face">Face</option>
+              <option value="lineart">Lineart</option>
+              <option value="stock">Stock</option>
+              <option value="photo">Photo</option>
+              <option value="animated">Animated</option>
+            </select>
           </div>
 
           <button type="submit"><i class="fas fa-search"></i> Search</button>
@@ -70,9 +102,10 @@
               <input
                 type="checkbox"
                 checked
+                onchange="safeSearchHandler()"
                 name="safe-search"
                 id="safe-search"
-                value="high"
+                value="active"
             /></label>
           </div>
         </fieldset>

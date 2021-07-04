@@ -137,17 +137,20 @@ button:not(.gsc-search-button.gsc-search-button-v2) {
   padding: 8px 10px;
 }
 
+select,
 input[type="checkbox"],
 label[for="safe-search"],
 button {
   cursor: pointer;
 }
 
+select,
 input:not(.gsc-input):not(#gsc-i-id1):not([type="checkbox"]) {
   border: var(--input-border);
   padding: 10px 12px;
 }
 
+select:focus,
 input:not(.gsc-input):not(#gsc-i-id1):not([type="checkbox"]):focus {
   outline: none;
   border-color: var(--input-border-focus-color);
