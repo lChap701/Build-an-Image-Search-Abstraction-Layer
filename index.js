@@ -31,7 +31,7 @@ let imageSchema = new Schema({
   query: String,
   images: [
     {
-      type: { type: { type: String } },
+      type: String,
       width: Number,
       height: Number,
       size: Number,
@@ -63,7 +63,7 @@ app.use(function middleware(req, res, next) {
   next();
 });
 
-// Loads CSS styles and JS scripts
+// Allows stylesheets, JS scripts, and other files to be loaded
 app.use(express.static(__dirname + "/public"));
 
 // Displays the Image Search Abstraction Layer page
@@ -78,11 +78,21 @@ db.once("open", function () {
     // Sets up search client
     const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
 
-    // Searches for images using query
-    const options = { page: req.body.page, safe: req.body["safe-search"] };
-    client.search(req.params.query, options).then((imgs) => {
-      res.json(imgs);
-    });
+    // Gets the options that were chosen
+    const options = {
+      page: req.body.page,
+      size: req.body.size,
+      type: req.body.type,
+      safe: req.body["safe-search"],
+    };
+
+    // Searches for images using the query and selected options
+    client
+      .search(req.params.query, options)
+      .then((imgs) => {
+        res.json(imgs);
+      })
+      .catch((err) => console.log(err));
   });
 
   // Finds images via query strings
@@ -90,11 +100,16 @@ db.once("open", function () {
     // Sets up search client
     const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
 
-    // Searches for images using query
+    // Gets the options that were chosen
     const options = { page: req.query.page };
-    client.search(req.params.query, options).then((imgs) => {
-      res.json(imgs);
-    });
+
+    // Searches for images using query and selected options
+    client
+      .search(req.params.query, options)
+      .then((imgs) => {
+        res.json(imgs);
+      })
+      .catch((err) => console.log(err));
   });
 
   // Displays the most recent searches
