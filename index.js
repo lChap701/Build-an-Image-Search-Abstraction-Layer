@@ -59,6 +59,7 @@ app.listen(process.env.PORT, "0.0.0.0");
 app.use(function middleware(req, res, next) {
   const fullPath =
     req.query.page > 0 ? req.path + "?page=" + req.query.page : req.path;
+  
   console.log(req.ip + " - " + req.method + "  " + fullPath);
   next();
 });
