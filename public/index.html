@@ -31,7 +31,14 @@
 
     <div id="container">
       <h1>Image Search Abstraction Layer</h1>
-      <p>Search for images across the internet or view recent searches</p>
+      <p>
+        Search for images across the internet or view recent searches using
+        <a
+          href="https://developers.google.com/custom-search/v1/reference/rest/v1/cse/list"
+          target="_blank"
+          >Custom Search JSON API</a
+        >
+      </p>
       <hr />
 
       <form
@@ -45,11 +52,11 @@
 
           <div class="col">
             <label for="query">Query:</label>
-            <input list="terms" name="query" id="query" />
+            <input list="terms" name="query" id="query" required />
 
             <!-- Displays the most recent terms (for this microservice)  -->
             <datalist id="terms">
-              <option value=""></option>
+              <option value="freeCodeCamp"></option>
             </datalist>
           </div>
 
@@ -110,6 +117,7 @@
           </div>
         </fieldset>
       </form>
+      <p><a></a></p>
     </div>
   </body>
 </html>
