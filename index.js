@@ -1,3 +1,5 @@
+const SearchOptions = require("./searchOptions");
+
 const express = require("express");
 const app = express();
 
@@ -8,7 +10,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Sets up image searches using my client search engine
 const GoogleImages = require("google-images");
+const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
 
 app.use(cors());
 
@@ -57,9 +61,23 @@ app.listen(process.env.PORT, "0.0.0.0");
 
 // Logs requests and other information
 app.use(function middleware(req, res, next) {
-  const fullPath =
-    req.query.page > 0 ? req.path + "?page=" + req.query.page : req.path;
-  
+  // Gets the full query string
+  let query = "?";
+  let keys = Object.keys(req.query);
+  let last = keys[keys.length - 1];
+
+  if (keys.length > 1) {
+    keys.forEach((k) => {
+      query +=
+        k == last ? k + "=" + req.query[k] : k + "=" + req.query[k] + "&";
+    });
+  } else {
+    query += "page=" + req.query.page;
+  }
+
+  // Gets the full path
+  const fullPath = keys.length !== 0 ? req.path + query : req.path;
+
   console.log(req.ip + " - " + req.method + "  " + fullPath);
   next();
 });
@@ -76,16 +94,13 @@ app.get("/", (req, res) => {
 db.once("open", function () {
   // Finds images and displays the results after submitting a form
   app.post("/query/:query", (req, res) => {
-    // Sets up search client
-    const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
-
-    // Gets the options that were chosen
-    const options = {
-      page: req.body.page,
-      size: req.body.size,
-      type: req.body.type,
-      safe: req.body["safe-search"],
-    };
+    // Gets the options that were selected as an object
+    const options = new SearchOptions(
+      req.body.page,
+      req.body.size,
+      req.body.type,
+      req.body["safe-search"]
+    );
 
     // Searches for images using the query and selected options
     client
@@ -98,11 +113,16 @@ db.once("open", function () {
 
   // Finds images via query strings
   app.get("/query/:query", (req, res) => {
-    // Sets up search client
-    const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
+    // Gets the page number that were chosen
+    const options = new SearchOptions(req.query.page);
 
-    // Gets the options that were chosen
-    const options = { page: req.query.page };
+    // Checks if any optional options were specified by looping through an array
+    let optional = ["size", "type", "safe"];
+    optional.forEach((opt) => {
+      if (req.query[opt]) {
+        options[opt] = req.query[opt];
+      }
+    });
 
     // Searches for images using query and selected options
     client
