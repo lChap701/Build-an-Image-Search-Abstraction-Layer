@@ -20,9 +20,8 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Sets up image searches using my programmable search engine
-const GoogleImages = require("google-images");
-const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
+const searchForImages = require("./searchForImages");
+const updateFile = require("./updateFile");
 
 // Connect to DB
 const mongoose = require("mongoose");
@@ -38,30 +37,21 @@ db.on("error", console.error.bind(console, "connection error:"));
 
 // Schema
 const Schema = mongoose.Schema;
-let imageSchema = new Schema({
-  query: String,
-  images: [
-    {
-      type: String,
-      width: Number,
-      height: Number,
-      size: Number,
-      url: String,
-      thumbnail: {
-        url: String,
-        width: Number,
-        height: Number,
-      },
-      description: String,
-      parentPage: String,
+let searchSchema = new Schema(
+  {
+    query: String,
+    searchOptions: {
+      page: Number,
+      imgSize: String,
+      imgType: String,
+      safe: String,
     },
-  ],
-  page: Number,
-  safe: String,
-});
+  },
+  { timestamps: true }
+);
 
 // Model
-const Image = mongoose.model("Images", imageSchema);
+const Search = mongoose.model("Searches", searchSchema);
 
 // Formats the IP Address
 app.listen(process.env.PORT, "0.0.0.0");
@@ -110,12 +100,27 @@ db.once("open", function () {
     );
 
     // Searches for images using the query and selected options
-    client
-      .search(req.params.query, options)
-      .then((imgs) => {
-        res.json(imgs);
-      })
-      .catch((err) => console.log(err));
+    searchForImages(res, req.params.query, options);
+
+    // Saves the search in the DB
+    let search = new Search({
+      query: req.params.query,
+      searchOptions: {
+        page: options.page,
+        imgSize: options.size,
+        imgType: options.type,
+        safe: options.safe,
+      },
+    });
+
+    search.save((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    // Saves query in JSON file (if it is a new query)
+    updateFile(req.params.query);
   });
 
   // Finds images via query strings
@@ -132,17 +137,47 @@ db.once("open", function () {
     });
 
     // Searches for images using query and selected options
-    client
-      .search(req.params.query, options)
-      .then((imgs) => {
-        res.json(imgs);
-      })
-      .catch((err) => console.log(err));
+    searchForImages(res, req.params.query, options);
+
+    // Saves the search in the DB
+    let search = new Search({
+      query: req.params.query,
+      searchOptions: {
+        page: options.page,
+        imgSize: options.size,
+        imgType: options.type,
+        safe: options.safe,
+      },
+    });
+
+    search.save((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    // Saves query in JSON file (if it is a new query)
+    updateFile(req.params.query);
   });
 
   // Displays the most recent searches
   app.get("/recent/", (req, res) => {
-    res.send("You made it!");
+    let src = [];
+
+    Search.find({}, (err, search) => {
+      if (err) {
+        console.log(err);
+      } else {
+        src = search.map((s) => {
+          return {
+            query: s.query,
+            searchOptions: s.searchOptions,
+          };
+        });
+
+        res.json(src);
+      }
+    });
   });
 });
 
