@@ -1,24 +1,31 @@
+/*
+ * Created by Lucas Chapman
+ *
+ * This project was on https://image-search-abstraction-layer.freecodecamp.rocks/
+ * for the purposes of earning a certificate from freeCodeCamp
+ */
+
 const SearchOptions = require("./searchOptions");
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
 
+// Setup CORS
 const cors = require("cors");
-require("dotenv").config();
+app.use(cors());
 
+// Set up body-parser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Sets up image searches using my client search engine
+// Sets up image searches using my programmable search engine
 const GoogleImages = require("google-images");
 const client = new GoogleImages(process.env.CSE_ID, process.env.API_KEY);
 
-app.use(cors());
-
-const mongoose = require("mongoose");
-
 // Connect to DB
+const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
