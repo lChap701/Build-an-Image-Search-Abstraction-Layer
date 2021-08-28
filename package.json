@@ -27,6 +27,7 @@
   "website": "https://Build-an-Image-Search-Abstraction-Layer.lchap701.repl.co",
   "cse": "https://cse.google.com/cse?cx=550da5a5df219eebf",
   "dependencies": {
+    "bad-words": "^3.0.4",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

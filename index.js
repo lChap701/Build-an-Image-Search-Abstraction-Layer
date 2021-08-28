@@ -20,6 +20,10 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Bad words filter
+const Filter = require("bad-words");
+let censor = new Filter();
+
 const searchForImages = require("./searchForImages");
 const updateFile = require("./updateFile");
 
@@ -119,8 +123,8 @@ db.once("open", function () {
       }
     });
 
-    // Saves query in JSON file (if it is a new query)
-    updateFile(req.params.query);
+    // Saves query in JSON file (if it is a new query) and appropriate
+    if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
   });
 
   // Finds images via query strings
@@ -156,8 +160,8 @@ db.once("open", function () {
       }
     });
 
-    // Saves query in JSON file (if it is a new query)
-    updateFile(req.params.query);
+    // Saves query in JSON file (if it is a new query) and appropriate
+    if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
   });
 
   // Displays the most recent searches
