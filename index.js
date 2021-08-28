@@ -9,6 +9,12 @@ const SearchOptions = require("./searchOptions");
 require("dotenv").config();
 
 const express = require("express");
+
+/**
+ * Module that contains the entire application
+ * @module ./index
+ *
+ */
 const app = express();
 
 // Setup CORS
@@ -92,9 +98,14 @@ app.get("/", (req, res) => {
 });
 
 // Executes once connected to DB
-db.once("open", function () {
+db.once("open", () => {
   // Finds images and displays the results after submitting a form
   app.post("/query/:query", (req, res) => {
+    if (!req.body.page) {
+      res.json({ error: "Page number is required" });
+      return;
+    }
+
     // Gets the options that were selected as an object
     const options = new SearchOptions(
       req.body.page,
@@ -119,6 +130,7 @@ db.once("open", function () {
 
     search.save((err) => {
       if (err) {
+        res.send(err);
         console.log(err);
       }
     });
@@ -129,6 +141,11 @@ db.once("open", function () {
 
   // Finds images via query strings
   app.get("/query/:query", (req, res) => {
+    if (!req.query.page) {
+      res.json({ error: "Page number is required" });
+      return;
+    }
+
     // Gets the page number that were chosen
     const options = new SearchOptions(req.query.page);
 
@@ -156,6 +173,7 @@ db.once("open", function () {
 
     search.save((err) => {
       if (err) {
+        res.send(err);
         console.log(err);
       }
     });
@@ -170,6 +188,7 @@ db.once("open", function () {
 
     Search.find({}, (err, search) => {
       if (err) {
+        res.send(err);
         console.log(err);
       } else {
         src = search.map((s) => {
@@ -194,3 +213,5 @@ app.get("/cse/", (req, res) => {
 const listener = app.listen(process.env.PORT || 8080, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
+
+module.exports = app; // For testing
