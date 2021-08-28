@@ -18,8 +18,6 @@ module.exports = function searchForImages(res, query, options) {
   // Searches for images using the query and selected options
   client
     .search(query, options)
-    .then((imgs) => {
-      res.json(imgs);
-    })
-    .catch((err) => console.log(err));
+    .then((imgs) => res.json(imgs))
+    .catch((err) => res.send(err));
 };
