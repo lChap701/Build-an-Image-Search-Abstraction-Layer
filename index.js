@@ -1,7 +1,7 @@
 /*
  * Created by Lucas Chapman
  *
- * This project was on https://image-search-abstraction-layer.freecodecamp.rocks/
+ * This project was based on https://image-search-abstraction-layer.freecodecamp.rocks/
  * for the purposes of earning a certificate from freeCodeCamp
  */
 
