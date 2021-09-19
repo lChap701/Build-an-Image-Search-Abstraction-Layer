@@ -21,11 +21,6 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 
-// Setup helmet
-const helmet = require("helmet");
-app.use(helmet.hidePoweredBy());
-app.use(helmet.xssFilter());
-
 // Setup body-parser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
