@@ -101,107 +101,110 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-// Finds images and displays the results after submitting a form
-app.post("/query/:query", (req, res) => {
-  if (!req.body.page) {
-    res.json({ error: "Page number is required" });
-    return;
-  }
-
-  // Gets the options that were selected as an object
-  const options = new SearchOptions(
-    req.body.page,
-    req.body.size,
-    req.body.type,
-    req.body["safe-search"]
-  );
-
-  // Searches for images using the query and selected options
-  searchForImages(res, req.params.query, options);
-
-  // Saves the search in the DB
-  let search = new Search({
-    query: req.params.query,
-    searchOptions: {
-      page: options.page,
-      imgSize: options.size,
-      imgType: options.type,
-      safe: options.safe,
-    },
-  });
-
-  search.save((err) => {
-    if (err) {
-      res.send(err);
-      console.log(err);
+// Executes once connected to DB
+db.once("open", () => {
+  // Finds images and displays the results after submitting a form
+  app.post("/query/:query", (req, res) => {
+    if (!req.body.page) {
+      res.json({ error: "Page number is required" });
+      return;
     }
+
+    // Gets the options that were selected as an object
+    const options = new SearchOptions(
+      req.body.page,
+      req.body.size,
+      req.body.type,
+      req.body["safe-search"]
+    );
+
+    // Searches for images using the query and selected options
+    searchForImages(res, req.params.query, options);
+
+    // Saves the search in the DB
+    let search = new Search({
+      query: req.params.query,
+      searchOptions: {
+        page: options.page,
+        imgSize: options.size,
+        imgType: options.type,
+        safe: options.safe,
+      },
+    });
+
+    search.save((err) => {
+      if (err) {
+        res.send(err);
+        console.log(err);
+      }
+    });
+
+    // Saves query in JSON file (if it is a new query) and appropriate
+    if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
   });
 
-  // Saves query in JSON file (if it is a new query) and appropriate
-  if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
-});
-
-// Finds images via query strings
-app.get("/query/:query", (req, res) => {
-  if (!req.query.page) {
-    res.json({ error: "Page number is required" });
-    return;
-  }
-
-  // Gets the page number that were chosen
-  const options = new SearchOptions(req.query.page);
-
-  // Checks if any optional options were specified by looping through an array
-  let optional = ["size", "type", "safe"];
-  optional.forEach((opt) => {
-    if (req.query[opt]) {
-      options[opt] = req.query[opt];
+  // Finds images via query strings
+  app.get("/query/:query", (req, res) => {
+    if (!req.query.page) {
+      res.json({ error: "Page number is required" });
+      return;
     }
+
+    // Gets the page number that were chosen
+    const options = new SearchOptions(req.query.page);
+
+    // Checks if any optional options were specified by looping through an array
+    let optional = ["size", "type", "safe"];
+    optional.forEach((opt) => {
+      if (req.query[opt]) {
+        options[opt] = req.query[opt];
+      }
+    });
+
+    // Searches for images using query and selected options
+    searchForImages(res, req.params.query, options);
+
+    // Saves the search in the DB
+    let search = new Search({
+      query: req.params.query,
+      searchOptions: {
+        page: options.page,
+        imgSize: options.size,
+        imgType: options.type,
+        safe: options.safe,
+      },
+    });
+
+    search.save((err) => {
+      if (err) {
+        res.send(err);
+        console.log(err);
+      }
+    });
+
+    // Saves query in JSON file (if it is a new query) and appropriate
+    if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
   });
 
-  // Searches for images using query and selected options
-  searchForImages(res, req.params.query, options);
+  // Displays the most recent searches
+  app.get("/recent/", (req, res) => {
+    let src = [];
 
-  // Saves the search in the DB
-  let search = new Search({
-    query: req.params.query,
-    searchOptions: {
-      page: options.page,
-      imgSize: options.size,
-      imgType: options.type,
-      safe: options.safe,
-    },
-  });
+    Search.find({}, (err, search) => {
+      if (err) {
+        res.send(err);
+        console.log(err);
+      } else {
+        src = search.map((s) => {
+          return {
+            query: s.query,
+            searchOptions: s.searchOptions,
+          };
+        });
 
-  search.save((err) => {
-    if (err) {
-      res.send(err);
-      console.log(err);
-    }
-  });
-
-  // Saves query in JSON file (if it is a new query) and appropriate
-  if (!censor.isProfane(req.params.query)) updateFile(req.params.query);
-});
-
-// Displays the most recent searches
-app.get("/recent/", (req, res) => {
-  let src = [];
-
-  Search.find({}, (err, search) => {
-    if (err) {
-      res.send(err);
-      console.log(err);
-    } else {
-      src = search.map((s) => {
-        return {
-          query: s.query,
-          searchOptions: s.searchOptions,
-        };
-      });
-
-      res.json(src);
-    }
+        res.json(src);
+      }
+    });
   });
 });
 
