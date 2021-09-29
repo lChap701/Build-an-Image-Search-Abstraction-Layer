@@ -1,7 +1,5 @@
-/**
- * Displays search terms when the page is loaded
- */
-window.onload = function displayTerms() {
+/* Displays search terms when the page is loaded */
+window.onload = () => {
   const terms = document.querySelector("datalist#terms");
 
   // Fetches terms in the JSON file
